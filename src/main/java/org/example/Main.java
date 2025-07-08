@@ -16,16 +16,35 @@ public class Main {
 
 
         BankService bank = new BankService();
-        String yuliiasNummer = bank.createAccount(yuliia);
-        String tomsNummer = bank.createAccount(tom);
-        String hermannsNummer = bank.createAccount(hermann);
-        String vikasNummer = bank.createAccount(vika);
+
+        List<Client> accountsList1 = new ArrayList<>();
+        List<Client> accountsList2 = new ArrayList<>();
+        accountsList2.add(yuliia);
+        accountsList2.add(hermann);
+        String account2Nummer = bank.createAccount(accountsList2);
+
+        accountsList1.add(yuliia);
+        accountsList1.add(tom);
+        accountsList1.add(vika);
+        String accounts3Nummer = bank.createAccount(accountsList1);
 
         System.out.println("---------------");
         bank.printAccounts();
         System.out.println("---------------");
 
-        System.out.println("Yullia transfer 10 Euro to Tom");
+        bank.split(account2Nummer);
+
+        System.out.println("---------------");
+        bank.printAccounts();
+        System.out.println("---------------");
+
+        bank.split(accounts3Nummer);
+
+        System.out.println("---------------");
+        bank.printAccounts();
+        System.out.println("---------------");
+
+        /**System.out.println("Yullia transfer 10 Euro to Tom");
         bank.transferMoney(yuliiasNummer, tomsNummer, new BigDecimal(10));
 
         System.out.println("Herman transfer 100 Euro to Yuliia");
@@ -36,6 +55,6 @@ public class Main {
 
         System.out.println("---------------");
         bank.printAccounts();
-        System.out.println("---------------");
+        System.out.println("---------------");**/
     }
 }

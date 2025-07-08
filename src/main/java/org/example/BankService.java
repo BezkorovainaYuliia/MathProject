@@ -1,18 +1,29 @@
 package org.example;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BankService {
     private Map<String, Account> accounts = new HashMap<>();
 
-    public String createAccount(Client client){
-        Account newAccount = new Account(client);
+    public String createAccount(List<Client> clients){
+        Account newAccount = new Account(clients);
         newAccount.plusAmount(new BigDecimal(1000));
         accounts.put(newAccount.getAccountNummer(),  newAccount);
         System.out.println("New account has been created with 1000 Euro");
-        System.out.println(client);
+        System.out.println(clients);
+        System.out.println(newAccount.getAccountNummer());
+        return newAccount.getAccountNummer();
+    }
+
+    public String createAccount(Client newClient, BigDecimal newAmount){
+        Account newAccount = new Account(newClient, newAmount);
+        accounts.put(newAccount.getAccountNummer(),  newAccount);
+        System.out.println("New account has been created with 1000 Euro");
+        System.out.println(newClient);
         System.out.println(newAccount.getAccountNummer());
         return newAccount.getAccountNummer();
     }
@@ -26,6 +37,40 @@ public class BankService {
         System.out.println("Current amount " + fromAccount + " " + currentToAccoun);
     }
 
+    public List<String> split(String accountNumber){
+        Account original = accounts.get(accountNumber);
+        if (original == null) {
+            throw new IllegalArgumentException("Konto nicht gefunden");
+        }
+
+        List<Client> owners = original.getClients();
+        int count = owners.size();
+        if (count < 2) {
+            throw new IllegalStateException("Kein Gemeinschaftskonto");
+        }
+
+        BigDecimal total = original.getAmount();
+
+        // Aufteilen in Cent → Ganzzahlige Rechnung vermeiden Rundungsfehler
+        int totalCents = total.multiply(BigDecimal.valueOf(100)).intValueExact();
+        int baseAmount = totalCents / count;
+        int remainder = totalCents % count;
+
+        List<String> newAccounts = new ArrayList<>();
+
+        for (int i = 0; i < count; i++) {
+            int cents = baseAmount + (i < remainder ? 1 : 0);  // Die ersten "remainder" bekommen 1 Cent extra
+            BigDecimal amount = BigDecimal.valueOf(cents).divide(BigDecimal.valueOf(100));
+
+            String newAccount = createAccount(owners.get(i), amount);
+            newAccounts.add(newAccount);
+        }
+
+        // Originalkonto leeren
+        original.setAmount(BigDecimal.ZERO);
+
+        return newAccounts;
+    }
     public void printAccounts(){
         for (Map.Entry<String, Account> entry : accounts.entrySet()) {
             System.out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());

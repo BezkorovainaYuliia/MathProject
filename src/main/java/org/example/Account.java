@@ -1,23 +1,41 @@
 package org.example;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
 public class Account {
     private String accountNummer;
     private BigDecimal amount;
-    private Client client;
+    private List<Client> clients;
 
-    public Account(Client client) {
+    public Account(List<Client> client) {
         Random random = new Random();
         this.accountNummer = "DE" + random.nextInt(10000000);
         this.amount = new  BigDecimal(0);
-        this.client = client;
+        this.clients = client;
+    }
+
+    public Account(Client client, BigDecimal amount) {
+        Random random = new Random();
+        this.accountNummer = "DE" + random.nextInt(10000000);
+        this.clients = new ArrayList<>();
+        this.clients.add(client);
+        this.amount = amount;
     }
 
     public String getAccountNummer() {
         return accountNummer;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 
     public BigDecimal minusAmount(BigDecimal minusAmount) {
@@ -33,12 +51,16 @@ public class Account {
         return amount;
     }
 
+    public List<Client> getClients() {
+        return clients;
+    }
+
     @Override
     public String toString() {
         return "Account{" +
                 "accountNummer='" + accountNummer + '\'' +
                 ", amount=" + amount +
-                ", client=" + client +
+                ", client=" + clients +
                 '}';
     }
 
@@ -46,11 +68,11 @@ public class Account {
     public boolean equals(Object object) {
         if (object == null || getClass() != object.getClass()) return false;
         Account account = (Account) object;
-        return Objects.equals(accountNummer, account.accountNummer) && Objects.equals(amount, account.amount) && Objects.equals(client, account.client);
+        return Objects.equals(accountNummer, account.accountNummer) && Objects.equals(amount, account.amount) && Objects.equals(clients, account.clients);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(accountNummer, amount, client);
+        return Objects.hash(accountNummer, amount, clients);
     }
 }
