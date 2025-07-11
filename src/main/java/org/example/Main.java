@@ -44,6 +44,12 @@ public class Main {
         bank.printAccounts();
         System.out.println("---------------");
 
+        bank.applyInterest(BigDecimal.valueOf(1.5));
+
+        System.out.println("---------------");
+        bank.printAccounts();
+        System.out.println("---------------");
+
         /**System.out.println("Yullia transfer 10 Euro to Tom");
         bank.transferMoney(yuliiasNummer, tomsNummer, new BigDecimal(10));
 

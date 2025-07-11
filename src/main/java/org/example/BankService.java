@@ -1,6 +1,7 @@
 package org.example;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +36,23 @@ public class BankService {
         BigDecimal currentToAccoun = toAccountClient.plusAmount(amount);
         System.out.println("Current amount " + fromAccount + " " +  currentFromAccoun);
         System.out.println("Current amount " + fromAccount + " " + currentToAccoun);
+    }
+
+    public void applyInterest(BigDecimal interestRatePercent) {
+        for (Account account : accounts.values()) {
+            BigDecimal balance = account.getAmount();
+
+            // Zinsen berechnen: balance * (zinssatz / 100)
+            BigDecimal interest = balance.multiply(interestRatePercent)
+                    .divide(BigDecimal.valueOf(100), 2, RoundingMode.DOWN); // auf 2 Nachkommastellen
+
+            // Gutschrift
+            BigDecimal newBalance = balance.add(interest);
+            account.setAmount(newBalance);
+
+            System.out.println("Konto " + account.getAccountNummer() +
+                    ": Zinsen " + interest + " €, neuer Kontostand: " + newBalance + " €");
+        }
     }
 
     public List<String> split(String accountNumber){
