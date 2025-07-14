@@ -7,5 +7,6 @@ public class Ubung {
         BigDecimal amount = new BigDecimal("100");
         amount = amount.divide(new BigDecimal("100"));
         System.out.println(amount);
+        System.out.println("Branche1");
     }
 }
